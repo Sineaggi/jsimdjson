@@ -1,9 +1,5 @@
-package example;
+package org.example;
 
-import jdk.incubator.vector.ByteVector;
-import jdk.incubator.vector.VectorMask;
-import jdk.incubator.vector.VectorShuffle;
-import jdk.incubator.vector.VectorSpecies;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -11,7 +7,7 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.Objects;
 
-public class MainTest {
+public class ParserTest {
     @Test
     public void main() {
         //language=JSON
@@ -39,38 +35,16 @@ public class MainTest {
         // System.out.println("hi2");
     }
 
-    private static final VectorSpecies<Byte> SPECIES = ByteVector.SPECIES_512;
-    private static final ByteVector E = ByteVector.fromBooleanArray();
-    private static final VectorShuffle SHL = ;// todo;
-
-    private static final VectorMask<Byte> shl(VectorMask<Byte> vm) {
-        // todo: goddamit
-        vm
-        throw new RuntimeException("onoz");
-    }
 
     @Test
     public void to() {
         byte[] bytes = readResource("/test.json");
         System.out.println(bytes.length);
-        ByteVector byteVector = ByteVector.fromArray(SPECIES, bytes, 0);
-        System.out.println(byteVector);
-        var B = byteVector.eq((byte)'\\');
-        var S = B.andNot(shl(B));
-        //B.rearrange(SHL);
-        B.
-
-        var E = ; // todo???; evens
-        var O = ; // todo???; odds
-        // identify 'starts' - backslashes characters not preceded by backslashes
-        var S = B &~(B << 1);
-        B.;;
-
-        //byteVector.eq();
+        Parser.parse(bytes);
     }
 
     private static byte[] readResource(String name) {
-        try (InputStream is = MainTest.class.getResourceAsStream(name)) {
+        try (InputStream is = ParserTest.class.getResourceAsStream(name)) {
             return Objects.requireNonNull(is).readAllBytes();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
