@@ -1,5 +1,8 @@
 package org.example;
 
+import jdk.incubator.vector.ByteVector;
+import jdk.incubator.vector.VectorOperators;
+import jdk.incubator.vector.VectorSpecies;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -49,5 +52,22 @@ public class ParserTest {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    private static final VectorSpecies<Byte> SPECIES = ByteVector.SPECIES_64;
+
+    @Test
+    public void carrylessmul() {
+        var bytes = new byte[]{
+                1, 0, 0, 0, 1, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0
+        };
+        ByteVector byteVector = ByteVector.fromArray(SPECIES, bytes, 0);
+        System.out.println(byteVector);
+        ByteVector ones = ByteVector.broadcast(ByteVector.SPECIES_64, 1);
+        var ff = byteVector.lanewise(VectorOperators.XOR, ones);
+        System.out.println(ff);
     }
 }
