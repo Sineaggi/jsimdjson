@@ -69,6 +69,19 @@ public class JsonStringScanner {
         return (even_bits ^ invert_mask) & follows_escape;
     }
 
+    /*
+bool add_overflow(uint64_t value1, uint64_t value2,
+                                  uint64_t *result) {
+#if SIMDJSON_REGULAR_VISUAL_STUDIO
+    return _addcarry_u64(0, value1, value2,
+                       reinterpret_cast<unsigned __int64 *>(result));
+#else
+    return __builtin_uaddll_overflow(value1, value2,
+                                     reinterpret_cast<unsigned long long *>(result));
+#endif
+}
+     */
+
     public long addOverflow(long value1, long value2) {
         // todo: write tests for this
         prevEscaped = overflow;
