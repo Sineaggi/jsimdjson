@@ -53,9 +53,16 @@ public class Parser {
         return byteVector.rearrange(SHL).eq((byte)'\\').and(CLEAR_FAR_RIGHT);
     }
 
+    private static final VectorSpecies<Byte> SPECIES_64 = ByteVector.SPECIES_64;
+
     public static void parse(byte[] json) {
         ByteVector byteVector = ByteVector.fromArray(SPECIES, json, 0);
         System.out.println(byteVector);
+        long backslash = byteVector.eq((byte)'\\').toLong();
+        //long escaped = findEscaped(backslash);
+        //long quote = byteVector.eq((byte)'"').toLong() & ~escaped;
+
+        //long inString = prefixXor(quote) ^ prevInString;
         var BB = byteVector.eq((byte)'\\').toVector();
         var B = byteVector.eq((byte)'\\');
         var E = Parser.E;
@@ -93,6 +100,7 @@ public class Parser {
             out = out ^ m1l << 1;
             // todo: handle overflow
         }
+        Long.compareUnsigned()
         ((ByteVector)m1.toVector()).toArray();
         //var f1 = LongVector.fromArray(LongVector.SPECIES_512, out, 0)
         //        .reinterpretAsBytes()
