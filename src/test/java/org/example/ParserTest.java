@@ -43,7 +43,7 @@ public class ParserTest {
     public void to() {
         byte[] bytes = readResource("/test.json");
         System.out.println(bytes.length);
-        Parser.parse(bytes);
+        Parser.parseViaLongs(bytes);
     }
 
     private static byte[] readResource(String name) {

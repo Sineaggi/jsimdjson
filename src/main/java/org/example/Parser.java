@@ -85,6 +85,65 @@ public class Parser {
         var Q = byteVector.eq((byte)'"');
     }
 
+    public static void parseViaLongs(byte[] json) {
+        ByteVector byteVector = ByteVector.fromArray(SPECIES, json, 0);
+        System.out.println(byteVector);
+        var B = byteVector.eq((byte)'\\').toLong();
+        var E = Parser.E.toLong();
+        var O = Parser.O.toLong();
+        // identify 'starts' - backslashes characters not preceded by backslashes
+        var S = B & ~(B << 1); // todo: not as efficient as it could be (see shl)
+        System.out.println(S);
+        // detect end of a odd-length sequence of backslashes starting on an even offset
+        // detail: ES gets all 'starts' that being on even offsets
+        var ES = S & E;
+        // add B to ES, yielding carries on backslash sequences with even starts
+        var EC = B + ES;
+        //var bola = VectorMask.fromLong(SPECIES, EC);
+        //System.out.println(bola);
+        var ECE = EC & ~B;
+
+        var OD1 = ECE & ~E;
+        var OD1s = VectorMask.fromLong(SPECIES, OD1);
+        System.out.println(OD1s);
+
+        var OS = S & O;
+        var OC = B + OS;
+        var OCE = OC & ~B;
+        var OD2 = OCE & E;
+
+        var OD = OD1 | OD2;
+        var ODs = VectorMask.fromLong(SPECIES, OD);
+        System.out.println(ODs);
+
+        var Q = byteVector.eq((byte)'"').toLong();
+        Q &= ~OD;
+        var Qs = VectorMask.fromLong(SPECIES, Q);
+        System.out.println(Qs);
+        CLMUL(Q, ~0);
+
+        //var B1 = B.toVector().neg().toString();
+        //var B22 = toString (B);
+        //var ES1 = ES.toVector().neg();
+        //var ES2 = toString(ES);
+        //var EC = B.toVector().neg().add(ES.toVector().neg()).eq(ONE);
+        ////var EC = B.toVector().neg().to
+        //B.toVector().neg().toLongArray();
+        //var EC2 = carrylessAdd(B, ES);
+        //System.out.println(EC);
+
+        // var S = B &~(B << 1);
+        // B.;;
+
+        //byteVector.eq();
+
+        //var Q = byteVector.eq((byte)'"');
+    }
+
+    private static long CLMUL(long a1, long a2) {
+        throw new RuntimeException("Not yet implemented.");
+    }
+
     private static VectorMask<Byte> carrylessAdd(VectorMask<Byte> m1, VectorMask<Byte> m2) {
         var m1l = m1.toLong();
         var m2l = m2.toLong();
@@ -97,8 +156,9 @@ public class Parser {
         //var f1 = LongVector.fromArray(LongVector.SPECIES_512, out, 0)
         //        .reinterpretAsBytes()
         //        .eq((byte)1);
-        return ByteVector.fromArray(ByteVector.SPECIES_64, out, 0)
-                .eq((byte)1);
+        //return ByteVector.fromArray(ByteVector.SPECIES_64, out, 0)
+        //        .eq((byte)1);
+        throw new RuntimeException("todo");
         //return f1;
     }
 
